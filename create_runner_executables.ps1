@@ -1,24 +1,37 @@
-# Specify the folder path where your .cs files are located
-$folderPath = "./met_payloads/"
+$runner_folder = "runner_executables"
 
 # Remove old xor_met_payloads folder
-Get-ChildItem -Path .\\runner_executables\\ -Recurse | ForEach-Object { $_.Delete() }
+if (Test-Path $runner_folder) {
+    Remove-Item $runner_folder -Recurse -Force
+    Write-Host "Folder '$runner_folder' has been deleted."
+} else {
+    Write-Host "Folder '$runner_folder' doesn't exist."
+}
 
-mkdir .\\runner_executables
+mkdir .\\$runner_folder
 
-# Get all .cs files recursively
-$csFiles = Get-ChildItem -Path $folderPath -Recurse -Filter "*.cs"
+# Specify the folder path where you want to search
+$met_payloads_path = "/met_payloads/"
 
-# Loop through each .cs file
-foreach ($csFile in $csFiles) {
-    # Construct the output file name (prepend "xor_" and change extension to .txt)
-    $outputFileName = Join-Path -Path $csFile.Directory.FullName -ChildPath ("xor_" + $csFile.BaseName + ".txt")
+# Get all files recursively
+$files = Get-ChildItem -Path $met_payloads_path -Recurse -File
 
-    # Run MyProgram.exe with the .cs file as an argument
-    # Redirect the output to the new file
-    $XOREncoderPath = '.\XOR Shellcode Encoder\bin\Debug\XOR Shellcode Encoder.exe'
-    & $XOREncoderPath $csFile.FullName > $outputFileName
+# Loop through each file
+foreach ($file in $files) {
+    # Check if the file name starts with "xor_"
+    if ($file.Name -like "xor_*") {
+        $XorPayloadPath = $file.FullName
+        & 'Shellcode Process Injector/compile_shellcode_process_injector.ps1' 'Shellcode Process Injector/Program.cs' $XorPayloadPath
+        Write-Host "Executed compile_shellcode_process_injector.ps1 for: $XorPayloadPath"
+    }
+}
 
-    # Display a message indicating the operation
-    Write-Host "Processed $($csFile.Name). Output saved to $outputFileName"
+# Move all the ShellcodeInjector executables to $runner_folder
+# Get all files starting with "ShellcodeProcessInjector_" in the source folder
+$filesToMove = Get-ChildItem -Path './' -File | Where-Object { $_.Name -like "ShellcodeProcessInjector_*" }
+
+# Move each file to the destination $runner_folder
+foreach ($file in $filesToMove) {
+    Move-Item -Path $file.FullName -Destination $runner_folder
+    Write-Host "Moved $($file.Name) to $runner_folder"
 }

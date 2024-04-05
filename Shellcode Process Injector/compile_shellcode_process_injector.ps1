@@ -55,7 +55,9 @@ catch {
 
 # Compile the program.cs file
 try {
-    $outputExe = "ShellcodeProcessInjector.exe"
+    #$payload_name = Split-Path -Path $NewByteArrayFilePath -Leaf
+    $payload_name = [System.IO.Path]::GetFileNameWithoutExtension($NewByteArrayFilePath)
+    $outputExe = "ShellcodeProcessInjector_${payload_name}.exe"
     & $cscPath64 /langversion:latest /target:exe /out:$outputExe $CsFilePath
     Write-Host "Compilation successful. Output saved as $outputExe"
 }
