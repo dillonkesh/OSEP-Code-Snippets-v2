@@ -50,7 +50,7 @@ try {
 catch {
     Write-Host "Error: Unable to retrieve files from $targetDirectory."
     Write-Host "Error: csc.exe not found. Make sure .NET Framework is installed."
-    exit 1
+    exit -1
 }
 
 # Compile the program.cs file
@@ -63,5 +63,5 @@ try {
 }
 catch {
     Write-Host "Error: Compilation failed. Check your source file and try again."
-    exit 1
+    exit -1
 }
