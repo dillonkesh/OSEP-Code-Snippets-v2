@@ -1,6 +1,6 @@
 param (
     [Parameter(Mandatory = $true)]
-    [string]$ProgramCsFilePath,
+    [string]$TargetProjectFolder, # Folder to Target C# Project to compile
 
     [Parameter(Mandatory = $true)]
     [string]$XORPayloadFilePath
@@ -11,6 +11,17 @@ param (
 #$targetDirectory = "C:\\Windows\\Microsoft.NET"
 $targetDirectory = "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\MSBuild\\Current\\Bin\\Roslyn"
 
+# Get path to C# Project's Program.cs file
+$ProgramCsFilePath = $null
+Get-ChildItem -Path $targetDirectory -Recurse -File | ForEach-Object {
+    if ($_.Name -eq "Program.cs") {
+        $ProgramCsFilePath = $_.FullName.Replace($targetDirectory, "")
+        Write-Host "Relative path to Program.cs: $ProgramCsFilePath"
+        break
+    }
+}
+
+# Get path to csc.exe Compiler Executable
 try {
     $filesInDirectory = Get-ChildItem -Path $targetDirectory -File -Recurse -Filter csc.exe
     Write-Host "Found files in ${targetDirectory}:"
