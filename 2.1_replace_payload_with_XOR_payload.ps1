@@ -11,7 +11,7 @@ param (
 $ProgramFilePath - $null
 Get-ChildItem -Path $TargetProjectFolder -Recurse -File | ForEach-Object {
     if ($_.Name -eq "Program.cs") {
-        $ProgramFilePath = $_.FullName.Replace($TargetProjectFolder, "")
+        $ProgramFilePath = $_.FullName
         Write-Host "Relative path to Program.cs: $ProgramFilePath"
         return
     }
@@ -33,3 +33,6 @@ $ProgramContent = $ProgramContent -replace '(byte\[\] buf = new byte\[)\d+\][^;]
 $ProgramContent | Set-Content -Path $ProgramFilePath
 
 Write-Host "Contents of $ProgramFilePath updated successfully."
+
+$scriptName = $MyInvocation.MyCommand.Name
+Write-Host "${scriptName} done!"

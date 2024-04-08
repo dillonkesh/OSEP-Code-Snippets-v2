@@ -13,7 +13,7 @@ param (
 $ProgramCsFilePath = $null
 Get-ChildItem -Path $TargetProjectFolder -Recurse -File | ForEach-Object {
     if ($_.Name -eq "Program.cs") {
-        $ProgramCsFilePath = $_.FullName.Replace($TargetProjectFolder, "")
+        $ProgramCsFilePath = $_.FullName
         Write-Host "Relative path to Program.cs: $ProgramCsFilePath"
         return
     }
@@ -57,8 +57,13 @@ try {
     $outputExe = "${outputExe}_${payload_name}.exe"
     & $cscPath64 /langversion:latest /target:exe /out:$outputExe $ProgramCsFilePath
     Write-Host "Compilation successful. Output saved as $outputExe"
+
+    return $outputExe
 }
 catch {
     Write-Host "Error: Compilation failed. Check your source file and try again."
     exit -1
 }
+
+$scriptName = $MyInvocation.MyCommand.Name
+Write-Host "${scriptName} done!"

