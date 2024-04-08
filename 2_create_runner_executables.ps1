@@ -45,16 +45,3 @@ foreach ($file in $files) {
 
 $scriptName = $MyInvocation.MyCommand.Name
 Write-Host "${scriptName} done!"
-
-
-# # Move all the ShellcodeInjector executables to $runner_folder
-# # Get all files starting with the executable's name in the source folder
-# $prepended_executable_name = $TargetProjectFolder
-# $prepended_executable_name = $prepended_executable_name -replace " ", ""
-# $filesToMove = Get-ChildItem -Path './' -File | Where-Object { $_.Name -like "${prepended_executable_name}_*" }
-
-# # Move each file to the destination $runner_folder
-# foreach ($file in $filesToMove) {
-#     Move-Item -Path $file.FullName -Destination $destination_runner_folder
-#     Write-Host "Moved $($file.Name) to $destination_runner_folder"
-# }
