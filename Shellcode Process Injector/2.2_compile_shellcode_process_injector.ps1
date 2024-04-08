@@ -1,28 +1,10 @@
 param (
     [Parameter(Mandatory = $true)]
-    [string]$CsFilePath,
+    [string]$ProgramCsFilePath,
 
     [Parameter(Mandatory = $true)]
-    [string]$NewByteArrayFilePath
+    [string]$XORPayloadFilePath
 )
-
-# STRING REPLACEMENT
-# Read the .cs file
-$csContent = Get-Content -Path $CsFilePath -Raw
-
-# Read the new byte array from the text file
-$newByteArray = Get-Content -Path $NewByteArrayFilePath -AsByteStream
-
-# Convert the byte array to a string
-$newString = [System.Text.Encoding]::Default.GetString($newByteArray)
-
-# Search and replace the 'buf' byte array
-$csContent = $csContent -replace '(byte\[\] buf = new byte\[)\d+\][^;]+;', $newString
-
-# Save the modified .cs file
-$csContent | Set-Content -Path $CsFilePath
-
-Write-Host "Contents of $CsFilePath updated successfully."
 
 # COMPILATION
 # Locate the csc.exe binary
@@ -34,13 +16,14 @@ try {
     Write-Host "Found files in ${targetDirectory}:"
     $cscExePath = $filesInDirectory | ForEach-Object { $_.FullName }
     if ($cscExePath.Count -gt 1) {
+        Write-Host "Multiple versions of csc.exe found in ${targetDirectory}"
         if ($cscExePath[0] -like "*Framework64*") {
             $cscPath64 = $cscExePath[0]
-            $cscPath32 = $cscExePath[1]
+            #$cscPath32 = $cscExePath[1]
         }
         else {
             $cscPath64 = $cscExePath[1]
-            $cscPath32 = $cscExePath[0]
+            #$cscPath32 = $cscExePath[0]
         }
     }
     else {
@@ -55,10 +38,10 @@ catch {
 
 # Compile the program.cs file
 try {
-    #$payload_name = Split-Path -Path $NewByteArrayFilePath -Leaf
-    $payload_name = [System.IO.Path]::GetFileNameWithoutExtension($NewByteArrayFilePath)
+    #$payload_name = Split-Path -Path $XORPayloadFilePath -Leaf
+    $payload_name = [System.IO.Path]::GetFileNameWithoutExtension($XORPayloadFilePath)
     $outputExe = "ShellcodeProcessInjector_${payload_name}.exe"
-    & $cscPath64 /langversion:latest /target:exe /out:$outputExe $CsFilePath
+    & $cscPath64 /langversion:latest /target:exe /out:$outputExe $ProgramCsFilePath
     Write-Host "Compilation successful. Output saved as $outputExe"
 }
 catch {
