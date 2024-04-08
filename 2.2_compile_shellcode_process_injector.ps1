@@ -51,7 +51,10 @@ catch {
 try {
     #$payload_name = Split-Path -Path $XORPayloadFilePath -Leaf
     $payload_name = [System.IO.Path]::GetFileNameWithoutExtension($XORPayloadFilePath)
-    $outputExe = "ShellcodeProcessInjector_${payload_name}.exe"
+    $outputExe = $TargetProjectFolder
+    $outputExe = $outputExe -replace " ", ""
+    $outputExe = $outputExe.TrimEnd("\\")
+    $outputExe = "${outputExe}_${payload_name}.exe"
     & $cscPath64 /langversion:latest /target:exe /out:$outputExe $ProgramCsFilePath
     Write-Host "Compilation successful. Output saved as $outputExe"
 }

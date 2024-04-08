@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # Define impt variables: IP & Port num
-LHOST=$(ip a | grep tun0 | tail -n 1 | awk '{print $2}' | awk -F/ '{print $1}')
-#LHOST=$(ip a | grep eth0 | tail -n 1 | awk '{print $2}' | awk -F/ '{print $1}')
+#LHOST=$(ip a | grep tun0 | tail -n 1 | awk '{print $2}' | awk -F/ '{print $1}')
+LHOST=$(ip a | grep eth0 | tail -n 1 | awk '{print $2}' | awk -F/ '{print $1}')
 LPORT=443
 
 # Delete any previous payloads
