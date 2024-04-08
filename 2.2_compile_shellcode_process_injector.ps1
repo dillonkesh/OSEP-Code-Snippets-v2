@@ -14,10 +14,10 @@ $ProgramCsFilePath = $null
 Get-ChildItem -Path $TargetProjectFolder -Recurse -File | ForEach-Object {
     if ($_.Name -eq "Program.cs") {
         $ProgramCsFilePath = $_.FullName.Replace($TargetProjectFolder, "")
+        Write-Host "Relative path to Program.cs: $ProgramCsFilePath"
         return
     }
 }
-Write-Host "Relative path to Program.cs: $ProgramCsFilePath"
 
 # Get path to csc.exe Compiler Executable
 #$targetDirectory = "C:\\Windows\\Microsoft.NET"

@@ -9,7 +9,7 @@
             "type": "PowerShell",
             "request": "launch",
             "script": "${file}",
-            "args": [".\\Program.cs", ".\\met64_https.cs"]
+            "args": ["\".\\Shellcode Process Injector\\\"", "met_payloads\\staged\\x64\\https\\met64_https.cs"]
         }
     ]
 }

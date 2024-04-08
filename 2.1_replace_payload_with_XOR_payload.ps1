@@ -1,25 +1,35 @@
 param (
     [Parameter(Mandatory = $true)]
-    [string]$CsFilePath,
+    [string]$TargetProjectFolder,
 
     [Parameter(Mandatory = $true)]
-    [string]$NewByteArrayFilePath
+    [string]$XORPayloadFilePath
 )
 
 # STRING REPLACEMENT
-# Read the .cs file
-$csContent = Get-Content -Path $CsFilePath -Raw
+# Get Program.cs file from project folder
+$ProgramFilePath - $null
+Get-ChildItem -Path $TargetProjectFolder -Recurse -File | ForEach-Object {
+    if ($_.Name -eq "Program.cs") {
+        $ProgramFilePath = $_.FullName.Replace($TargetProjectFolder, "")
+        Write-Host "Relative path to Program.cs: $ProgramFilePath"
+        return
+    }
+}
+
+# Read the Program.cs file
+$ProgramContent = Get-Content -Path $ProgramFilePath -Raw
 
 # Read the new byte array from the text file
-$newByteArray = Get-Content -Path $NewByteArrayFilePath -AsByteStream
+$XORByteArray = Get-Content -Path $XORPayloadFilePath -AsByteStream
 
 # Convert the byte array to a string
-$newString = [System.Text.Encoding]::Default.GetString($newByteArray)
+$newString = [System.Text.Encoding]::Default.GetString($XORByteArray)
 
 # Search and replace the 'buf' byte array
-$csContent = $csContent -replace '(byte\[\] buf = new byte\[)\d+\][^;]+;', $newString
+$ProgramContent = $ProgramContent -replace '(byte\[\] buf = new byte\[)\d+\][^;]+;', $newString
 
 # Save the modified .cs file
-$csContent | Set-Content -Path $CsFilePath
+$ProgramContent | Set-Content -Path $ProgramFilePath
 
-Write-Host "Contents of $CsFilePath updated successfully."
+Write-Host "Contents of $ProgramFilePath updated successfully."

@@ -21,7 +21,9 @@ foreach ($file in $files) {
     # Check if the file name starts with "xor_"
     if ($file.Name -like "xor_*") {
         $XorPayloadPath = $file.FullName
-        & 'Shellcode Process Injector/2.1_replace_payload_with_XOR_payload.ps1' 'Shellcode Process Injector' $XorPayloadPath
+        & './2.1_replace_payload_with_XOR_payload.ps1' 'Shellcode Process Injector' $XorPayloadPath
+        & './2.2_compile_shellcode_process_injector.ps1' 'Shellcode Process Injector' $XorPayloadPath
+
         Write-Host "Executed compile_shellcode_process_injector.ps1 for: $XorPayloadPath"
     }
 }
